@@ -10,24 +10,32 @@ class Post:
         self.url = url
 
 
-def GetPosts(url, story_count=1):
+class Scraper:
 
-    if ".json" not in url:
-        url = url + ".json"
+    def __init__(self):
+        self.ua = UserAgent().chrome
 
-    data = requests.get(url, headers={"User-Agent": UserAgent().chrome}).json()
 
-    results = []
+    def get(self, url, story_count=1):
 
-    for story in range(story_count):
+        if ".json" not in url:
+            url += ".json"
+
+        data = requests.get(url, headers=self.ua).json()
+
+        results = []
+
+        while story_count <= 25: # max per request 
         
-        post = data['data']['children'][story]['data']
-        title = post['title']
-        text = post['selftext']
-        postURL = post['url']
+            post = data['data']['children'][story_count]['data']
+            title = post['title']
+            text = post['selftext']
+            postURL = post['url']
 
-        results.append(Post(title, text, postURL))
+            results.append(Post(title, text, postURL))
+            story_count += 1 
 
-    return results
+        return results
+    
 
 
