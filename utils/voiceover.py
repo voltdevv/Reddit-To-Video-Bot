@@ -1,15 +1,18 @@
 from murf import Murf
 
-client = Murf(
-    api_key=""
-)
+class Voice:
 
+    def __init__(self, api):
+        self.client = Murf(
+            api_key = api
+        )
 
-def generate_voice(text):
-    # visit link below for different voices. just change the name. i.e terrell to natalie
-    # https://murf.ai/api/docs/voices-styles/voice-library#english---us--canada
+    def generate(self, text, name="terrell"):
+        audio = self.client.text_to_speech.generate(
+            text = text,
+            voice_id = f"en-US-{name}"
+        )
 
-    audio = client.text_to_speech.generate(
-        text = '',
-        voice_id= 'en-US-terrell'
-    )
+        return audio.audio_file
+
+        
